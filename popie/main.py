@@ -72,14 +72,14 @@ def main():
 
     if args.strict and updated_files > 0:
         print(f"PoPie: {updated_files} files updated in strict mode. ")
-        sys.exit(os.EX_SOFTWARE)
+        sys.exit(getattr(os, "EX_SOFTWARE", 70))
 
     if error_count:
         print(f"PoPie: {updated_files} files updated, {error_count} errors found. ")
-        sys.exit(os.EX_SOFTWARE)
+        sys.exit(getattr(os, "EX_SOFTWARE", 70))
 
     print(f"PoPie: {updated_files} files have been updated.")
-    sys.exit(os.EX_OK)
+    sys.exit(getattr(os, "EX_OK", 0))
 
 
 def get_paths(paths: Iterable[str]) -> List[Path]:
@@ -93,7 +93,7 @@ def get_paths(paths: Iterable[str]) -> List[Path]:
         path = Path(path_str)
         if not path.exists():
             print(f"Error: Specified path '{path!s}' does not exist.")
-            sys.exit(os.EX_USAGE)
+            sys.exit(getattr(os, "EX_USAGE", 64))
         result.append(path.resolve())
     return sorted(result)
 
@@ -152,7 +152,7 @@ def get_directories(paths: Iterable[Path], *, detached: bool) -> List[Path]:
             print(f"- {rel_root}")
             rel_path_root: str = os.path.relpath(path_root, start=Path.cwd())
             print(f"- {rel_path_root}")
-            sys.exit(os.EX_SOFTWARE)
+            sys.exit(getattr(os, "EX_SOFTWARE", 70))
 
         relpath: str = os.path.relpath(path, start=root)
         # The 'pie/' may be specified on its own.
@@ -188,7 +188,7 @@ def run(directory: Path) -> int:
     """
     if not directory.is_dir():
         print(f"Error: Can't run for '{directory!s}' (path does not exist).")
-        sys.exit(os.EX_USAGE)
+        sys.exit(getattr(os, "EX_USAGE", 64))
 
     error_count: int = 0
     reporter = Reporter()
